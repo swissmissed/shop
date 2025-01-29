@@ -29,6 +29,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
 }
 
 tasks.named('test') {

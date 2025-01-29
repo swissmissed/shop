@@ -14,7 +14,38 @@
 <form action="/add" method="post">
     <input name="title">
     <input name="price">
+    <input name="imageurl" id="imageurl" type="hidden">
     <button type="submit">전송</button>
 </form>
+
+<input type="file" onchange="getURL(this)">
+<img id="preview" src="" style="max-width: 200px; display: block; margin-top: 10px;">
+
+<script>
+    async function getURL(e) {
+        let file = e.files[0];
+        if (!file) return;
+
+        let name = encodeURIComponent(file.name);
+        let result = await fetch('/presigned-url?filename=' + name);
+        let uploadURL = await result.text();
+
+        let uploadResponse = await fetch(uploadURL, {
+            method: "PUT",
+            body: file
+        });
+
+        if (uploadResponse.ok) {
+            let imageUrl = uploadURL.split("?")[0]; // ✅ "?" 이전까지만 저장
+            console.log("업로드된 이미지 URL:", imageUrl); // 디버깅 로그 확인
+
+            document.getElementById('preview').src = imageUrl; // 미리보기 업데이트
+            document.getElementById('imageurl').value = imageUrl; // hidden 필드에 저장
+        } else {
+            alert("이미지 업로드 실패!");
+        }
+    }
+</script>
+
 </body>
 </html>

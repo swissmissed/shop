@@ -17,8 +17,10 @@ public class ItemService {
         Item item = new Item();
         String title = datas.get("title").toString();
         Integer price = Integer.valueOf(datas.get("price").toString());
+        String url = datas.get("imageurl").toString();
         item.setTitle(title);
         item.setPrice(price);
+        item.setImageurl(url);
         itemRepository.save(item);
     }
 

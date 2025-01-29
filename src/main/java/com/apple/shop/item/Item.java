@@ -16,4 +16,7 @@ public class Item {
 
     private String title;
     private Integer price;
+
+    @Column(length = 2083)
+    private String imageurl;
 }

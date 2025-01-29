@@ -22,6 +22,7 @@ public class ItemController {
     private final ItemRepository itemRepository;
     private final ItemService itemService;
     private final CommentRepository commentRepository;
+    private final S3Service s3Service;
 
     @GetMapping("/list")
     String list(Model model) {
@@ -37,9 +38,16 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    String addPost(@RequestParam Map<String, Object> datas) {
-        itemService.saveItem(datas);
+    public String addPost(@RequestParam Map<String, Object> datas) {
+        System.out.println("서버에서 받은 데이터: " + datas);
 
+        if (!datas.containsKey("imageurl")) {
+            System.out.println("🚨 'imageurl' 키가 없음! 클라이언트에서 제대로 전달되지 않음.");
+        } else {
+            System.out.println("✅ 받은 imageUrl: " + datas.get("imageurl"));
+        }
+
+        itemService.saveItem(datas);
         return "redirect:/list";
     }
 
@@ -109,4 +117,13 @@ public class ItemController {
         model.addAttribute("items", res);
         return "searchlist.html";
     }
+
+    @GetMapping("/presigned-url")
+    @ResponseBody
+    String getURL(@RequestParam String filename) {
+        var res = s3Service.createPresignedUrl("test/" + filename);
+
+        return res;
+    }
+
 }
